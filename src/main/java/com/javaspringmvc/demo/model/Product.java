@@ -3,6 +3,8 @@ package com.javaspringmvc.demo.model;
 
 
 import javax.persistence.*;
+import java.sql.Blob;
+
 @Entity
 @Table(name = "products")
 public class Product {
@@ -16,16 +18,9 @@ public class Product {
     private Double weight;
     private String description;
 
-    @Column(nullable = true, length = 250)
-    private String image;
+    @Lob
+    private Blob image;
 
-    @Transient
-    public String getPhotosImagePath(){
-        if(image == null){
-            return null;
-        }
-        return "/product_photos/" + id + "/" + image;
-    }
 
     public long getId() {
         return id;
@@ -75,11 +70,13 @@ public class Product {
         this.description = description;
     }
 
-    public String getImage() {
+
+
+    public Blob getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(Blob image) {
         this.image = image;
     }
 }

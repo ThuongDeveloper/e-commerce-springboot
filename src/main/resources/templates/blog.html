@@ -175,7 +175,8 @@
           <td th:text="${blog.blog_title}"></td>
           <td th:text="${blog.blog_content}"></td>
           <td>
-            <img th:src="${blog.PhotosImagePath}" width="80px">
+<!--            <img th:src="${blog.PhotosImagePath}" width="80px">-->
+            <img th:src="@{${'/display/blogs?id=' + blog.id}}" width="80px" />
           </td>
           <td class="blog_action">
             <a th:href="@{/admin/blog/edit/{id}(id=${blog.id})}"><button class="btn btn-warning">Edit</button></a>

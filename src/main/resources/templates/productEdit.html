@@ -174,7 +174,8 @@
         <br>
         <div class="form-group">
           <label>Current Image</label><br/>
-          <img th:src="${product.PhotosImagePath}" width="80px"/>
+<!--          <img th:src="${product.PhotosImagePath}" width="80px"/>-->
+          <img th:src="@{${'/display/products?id=' + product.id}}" width="80px" />
         </div>
         <br/>
         <div class="form-group">

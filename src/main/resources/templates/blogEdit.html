@@ -157,7 +157,8 @@
         <br>
         <div class="form-group">
           <label>Current Image</label><br/>
-          <img th:src="${blog.PhotosImagePath}" width="80px"/>
+<!--          <img th:src="${blog.PhotosImagePath}" width="80px"/>-->
+          <img th:src="@{${'/display/blogs?id=' + blog.id}}" width="80px" />
         </div>
         <br/>
         <div class="form-group">

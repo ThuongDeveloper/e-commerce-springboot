@@ -151,7 +151,13 @@
                             <i class="fa fa-chart-bar fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Total Order</p>
-                                <h6 class="mb-0" th:text="${#lists.size(orders)}"></h6>
+                                <h6 th:if="${#lists.isEmpty(orders)}" class="mb-0">
+                                    0
+                                </h6>
+                                <span th:unless="${#lists.isEmpty(orders)}">
+                                     <h6 class="mb-0" th:text="${#lists.size(orders)}"></h6>
+                                </span>
+
                             </div>
                         </div>
                     </div>
@@ -160,7 +166,12 @@
                             <i class="fa fa-chart-area fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Order Processing</p>
-                                <h6 class="mb-0" th:text="${#lists.size(process)}"></h6>
+                                <h6 th:if="${#lists.isEmpty(orders)}" class="mb-0">
+                                    0
+                                </h6>
+                                <span th:unless="${#lists.isEmpty(orders)}">
+                                    <h6 class="mb-0" th:text="${#lists.size(process)}"></h6>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -169,7 +180,12 @@
                             <i class="fa fa-chart-pie fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Total Revenue</p>
-                                <h6 class="mb-0">$[[${total_price}]]</h6>
+                                <h6 th:if="${#lists.isEmpty(orders)}" class="mb-0">
+                                    $0
+                                </h6>
+                                <span th:unless="${#lists.isEmpty(orders)}">
+                                    <h6 class="mb-0">$[[${total_price}]]</h6>
+                                </span>
                             </div>
                         </div>
                     </div>

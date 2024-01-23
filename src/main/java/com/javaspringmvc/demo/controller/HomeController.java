@@ -1,23 +1,12 @@
 package com.javaspringmvc.demo.controller;
 
-import com.javaspringmvc.demo.config.SecurityUtils;
+
 import com.javaspringmvc.demo.model.*;
 import com.javaspringmvc.demo.repository.*;
 import com.javaspringmvc.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
@@ -35,8 +23,7 @@ import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 
-import java.util.Map;
-import java.util.Optional;
+
 
 @Controller
 public class HomeController {
@@ -82,7 +69,7 @@ public class HomeController {
     public String index(Model model, Principal principal, HttpSession session, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             List<Product> products = productService.getAllProduct();
             model.addAttribute("products", products);
@@ -108,7 +95,7 @@ public class HomeController {
 
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             List<CartItem> cartItems = cartItemRepository.findByUser(currentUser);
             model.addAttribute("cartItems", cartItems);
@@ -129,7 +116,7 @@ public class HomeController {
 
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             List<Blog> blogs = blogService.getSearchBlog(keyword);
             model.addAttribute("blogs", blogs);
@@ -153,7 +140,7 @@ public class HomeController {
     public String contact(Model model, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             SendEmail sendEmail = new SendEmail();
             List<CartItem> cartItems = cartItemRepository.findByUser(currentUser);
@@ -175,7 +162,7 @@ public class HomeController {
     public String sendEmail(@ModelAttribute SendEmail email, HttpSession session, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             sendEmailRepository.save(email);
             session.setAttribute("msg", "Email sent successfully");
@@ -192,7 +179,7 @@ public class HomeController {
     public String subscribe(@RequestParam("email") String email, HttpSession session, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             sendEmailService.sendSubscribe(email);
             session.setAttribute("msg", "You have successfully subscribe");
@@ -209,7 +196,7 @@ public class HomeController {
     public String aboutSubscribe(@RequestParam("email") String email, HttpSession session, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             sendEmailService.sendSubscribe(email);
             session.setAttribute("msg", "You have successfully subscribe");
@@ -226,7 +213,7 @@ public class HomeController {
     public String productSubscribe(@RequestParam("email") String email, HttpSession session, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             sendEmailService.sendSubscribe(email);
             session.setAttribute("msg", "You have successfully subscribe");
@@ -245,7 +232,7 @@ public class HomeController {
     public String cart(Model model, Principal principal, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             List<CartItem> cartItems = cartItemRepository.findByUser(currentUser);
             model.addAttribute("cartItems", cartItems);
@@ -262,7 +249,7 @@ public class HomeController {
     public String addToCart(@PathVariable Long productId, @RequestParam int quantity, Principal principal, HttpSession session, HttpServletRequest request) throws Exception {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             Product product = productRepository.findById(productId).orElseThrow(() -> new Exception("Product not found"));
             CartItem currentCart = cartItemRepository.findByUserAndProduct(currentUser, product);
@@ -292,7 +279,7 @@ public class HomeController {
     public String deleteCart(@PathVariable("id") Long cartId, Model model, HttpSession session, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             cartItemRepository.deleteById(cartId);
             session.setAttribute("msg", "Delete cart successful");
@@ -456,7 +443,7 @@ public class HomeController {
     public String product(Model model, Principal principal, @Param("keyword") String keyword, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             List<Product> products = productService.getSearchProduct(keyword);
             Iterable<Category> categories = categoryRepository.findAll();
@@ -477,7 +464,7 @@ public class HomeController {
     public String searchPrice(@RequestParam(value = "min_price", required = false) Double from, @RequestParam(value = "max_price", required = false) Double to, Model model, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             if (from == null || to == null) {
                 List<Product> products = productRepository.findAll();
@@ -509,7 +496,7 @@ public class HomeController {
     public String detailProduct(@PathVariable(value = "id") long id, Model model, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             Product product = productService.getProductById(id);
             model.addAttribute("product", product);
@@ -529,7 +516,7 @@ public class HomeController {
     public String checkout(Model model, Principal principal, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             List<CartItem> cartItems = cartItemRepository.findByUser(currentUser);
             model.addAttribute("cartItems", cartItems);
@@ -546,7 +533,7 @@ public class HomeController {
     public String showOrder(Principal principal, Model model, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             List<Order> listOrder = orderRepository.findByUser(currentUser);
             model.addAttribute("listOrder", listOrder);
@@ -567,7 +554,7 @@ public class HomeController {
                              @RequestParam("selector") String paymentSelect, HttpServletRequest request) throws PayPalRESTException {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             List<CartItem> currentCart = cartItemRepository.findByUser(currentUser);
             for (CartItem cartItem : currentCart) {
@@ -613,7 +600,7 @@ public class HomeController {
     public String cancelOrder(Principal principal, @PathVariable long id, Model model, HttpSession session, HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             orderRepository.deleteById(id);
             session.setAttribute("msgOrder", "Order has been canceled successfully");
@@ -630,7 +617,7 @@ public class HomeController {
     public String cancelPay(HttpServletRequest request, HttpSession session) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             session.setAttribute("cancel", "The transaction has been canceled by you.");
             return "redirect:/checkout";
@@ -648,7 +635,7 @@ public class HomeController {
                              HttpServletRequest request) {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            return "error/403";
+            return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             List<CartItem> currentCartItem = cartItemRepository.findByUserId(currentUserID);
             for (CartItem cartItemPaypal : currentCartItem) {

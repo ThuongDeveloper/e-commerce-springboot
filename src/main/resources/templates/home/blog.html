@@ -365,7 +365,7 @@
                     <div class="blog_left_sidebar">
                         <article class="blog_item" th:each="blog: ${blogs}">
                             <div class="blog_item_img">
-                                <img class="card-img rounded-0" th:src="${blog.PhotosImagePath}" alt="">
+                                <img class="card-img rounded-0" th:src="@{${'/display/blogs?id=' + blog.id}}" width="50px" alt="" />
                             </div>
                             <div class="blog_details">
                                 <h2 th:text="${blog.blog_title}"></h2>
