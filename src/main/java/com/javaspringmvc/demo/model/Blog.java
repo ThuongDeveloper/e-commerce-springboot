@@ -1,7 +1,9 @@
 package com.javaspringmvc.demo.model;
 
+
 import javax.persistence.*;
 import java.sql.Blob;
+
 
 @Entity
 @Table(name = "blogs")
@@ -12,8 +14,10 @@ public class Blog {
     private String blog_title;
     private String blog_content;
 
-    @Lob
-    private Blob blog_image;
+     @Lob
+     private Blob image;
+
+
 
 
     public long getId() {
@@ -41,11 +45,11 @@ public class Blog {
     }
 
 
-    public Blob getBlog_image() {
-        return blog_image;
+    public Blob getImage() {
+        return image;
     }
 
-    public void setBlog_image(Blob blog_image) {
-        this.blog_image = blog_image;
+    public void setImage(Blob image) {
+        this.image = image;
     }
 }

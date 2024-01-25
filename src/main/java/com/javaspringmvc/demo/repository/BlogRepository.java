@@ -7,9 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BlogRepository extends JpaRepository<Blog, Long> {
     @Query("SELECT blog FROM Blog blog WHERE CONCAT(blog.id, ' ', blog.blog_title) LIKE %?1%")
     public List<Blog> searchBlog(String keyword);
+
+
 }

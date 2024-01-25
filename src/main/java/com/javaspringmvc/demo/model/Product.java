@@ -2,8 +2,11 @@ package com.javaspringmvc.demo.model;
 
 
 
+
+
 import javax.persistence.*;
 import java.sql.Blob;
+
 
 @Entity
 @Table(name = "products")
@@ -18,8 +21,10 @@ public class Product {
     private Double weight;
     private String description;
 
-    @Lob
-    private Blob image;
+     @Lob
+     private Blob image;
+
+
 
 
     public long getId() {
@@ -69,7 +74,6 @@ public class Product {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
 
     public Blob getImage() {

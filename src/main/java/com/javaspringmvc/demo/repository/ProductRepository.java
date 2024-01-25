@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -18,4 +19,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT product FROM Product product WHERE product.price BETWEEN :from AND :to")
     public List<Product> findByPrice(@Param("from") Double from, @Param("to") Double to);
+
+
 }

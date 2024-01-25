@@ -186,7 +186,8 @@
                     <td th:text="${product.description}"></td>
                     <td th:text="${product.category_name}"></td>
                     <td>
-                        <img th:src="@{${'/display/products?id=' + product.id}}" width="50px" alt="" />
+
+                         <img th:src="@{${'/display/products?id=' + product.id}}" width="50px" alt="" />
                     </td>
                     <td class="action_box">
                         <a th:href="@{/admin/product/edit/{id}(id=${product.id})}"><button class="btn btn-warning">Edit</button></a>

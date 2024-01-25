@@ -51,23 +51,29 @@ public class AdminController {
     @Autowired
     private AuthService authService;
 
-    @GetMapping("/display/products")
-    public ResponseEntity<byte[]> displayProductImage(@RequestParam("id") long id) throws IOException, SQLException
-    {
-        Product product = productService.getProductById(id);
-        byte [] imageBytes = null;
-        imageBytes = product.getImage().getBytes(1,(int) product.getImage().length());
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
-    }
 
-    @GetMapping("/display/blogs")
-    public ResponseEntity<byte[]> displayBlogImage(@RequestParam("id") long id) throws IOException, SQLException
-    {
-        Blog blog = blogService.getBlogById(id);
-        byte [] imageBytes = null;
-        imageBytes = blog.getBlog_image().getBytes(1,(int) blog.getBlog_image().length());
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
-    }
+
+
+
+
+     @GetMapping("/display/products")
+     public ResponseEntity<byte[]> displayProductImage(@RequestParam("id") long id) throws IOException, SQLException
+     {
+         Product product = productService.getProductById(id);
+         byte [] imageBytes = null;
+         imageBytes = product.getImage().getBytes(1,(int) product.getImage().length());
+         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
+     }
+
+     @GetMapping("/display/blogs")
+     public ResponseEntity<byte[]> displayBlogImage(@RequestParam("id") long id) throws IOException, SQLException
+     {
+         Blog blog = blogService.getBlogById(id);
+         byte [] imageBytes = null;
+         imageBytes = blog.getImage().getBytes(1,(int) blog.getImage().length());
+         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
+     }
+
     @GetMapping("/admin/dashboard")
     public String dash(Model model, HttpServletRequest request){
         User currentUser = authService.isAuthenticatedUser(request);
@@ -222,11 +228,12 @@ public class AdminController {
         if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            byte[] bytes = multipartFile.getBytes();
-            Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
-            product.setImage(blob);
-            productService.saveProduct(product);
-            return "redirect:/admin/product";
+             byte[] bytes = multipartFile.getBytes();
+             Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
+             product.setImage(blob);
+             productService.saveProduct(product);
+             return "redirect:/admin/product";
+
         }else {
             return "redirect:/sign-in";
         }
@@ -234,14 +241,21 @@ public class AdminController {
     }
 
     @GetMapping("/admin/product/delete/{id}")
-    public String deleteProduct(@PathVariable(value = "id") long id, Model model, HttpServletRequest request){
+    public String deleteProduct(@PathVariable(value = "id") long id, Model model, HttpServletRequest request) throws IOException {
         User currentUser = authService.isAuthenticatedUser(request);
         if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            productService.deleteProductById(id);
-            model.addAttribute("currentUser", currentUser);
-            return "redirect:/admin/product";
+            Optional<Product> product = productRepository.findById(id);
+            if (product.isPresent()){
+                productService.deleteProductById(id);
+                model.addAttribute("currentUser", currentUser);
+                return "redirect:/admin/product";
+            }else{
+                return "404";
+            }
+
+
         }else {
             return "redirect:/sign-in";
         }
@@ -311,7 +325,7 @@ public class AdminController {
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
             byte[] bytes = multipartFile.getBytes();
             Blob blob = new javax.sql.rowset.serial.SerialBlob(bytes);
-            blog.setBlog_image(blob);
+            blog.setImage(blob);
             blogService.saveBlog(blog);
             return "redirect:/admin/blog";
         }else {
@@ -347,9 +361,14 @@ public class AdminController {
         if (currentUser != null && currentUser.getRole().equals("ROLE_USER")) {
             return "redirect:/forbidden";
         } else if (currentUser != null && currentUser.getRole().equals("ROLE_ADMIN")) {
-            blogService.deleteBlogById(id);
-            model.addAttribute("currentUser", currentUser);
-            return "redirect:/admin/blog";
+            Optional<Blog> blog = blogRepository.findById(id);
+            if(blog.isPresent()) {
+                blogService.deleteBlogById(id);
+                model.addAttribute("currentUser", currentUser);
+                return "redirect:/admin/blog";
+            }else{
+                return "404";
+            }
         }else {
             return "redirect:/sign-in";
         }

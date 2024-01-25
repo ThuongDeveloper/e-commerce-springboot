@@ -142,7 +142,12 @@
                             <i class="fa fa-chart-line fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">Total Customer</p>
-                                <h6 class="mb-0" th:text="${#lists.size(users)}"></h6>
+                                <h6 th:if="${#lists.isEmpty(users)}" class="mb-0">
+                                    0
+                                </h6>
+                                <span th:unless="${#lists.isEmpty(users)}">
+                                    <h6 class="mb-0" th:text="${#lists.size(users)}"></h6>
+                                </span>
                             </div>
                         </div>
                     </div>
